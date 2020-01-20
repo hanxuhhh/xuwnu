@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HouseElkApplication {
 
     public static void main(String[] args) {
-        System.out.println("main is start ");
         SpringApplication.run(HouseElkApplication.class, args);
     }
 
