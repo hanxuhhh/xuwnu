@@ -61,7 +61,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -507,7 +506,7 @@ public class EsSearchServiceImpl implements EsSearchService {
      *
      * @param content
      */
-    @KafkaListener(id = "", topics = KAFKA_TOPIC, groupId = "xunwu")
+    @KafkaListener(topics = KAFKA_TOPIC)
     private void handleMessage(String content) {
         KafKaMessage kafKaMessage = JSONObject.parseObject(content, KafKaMessage.class);
         switch (kafKaMessage.getOperation()) {
