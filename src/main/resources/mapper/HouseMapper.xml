@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hww.house.mapper.HouseMapper">
+
+    <resultMap id="houseMap" type="com.hww.house.entity.House">
+        <result column="id" property="id"></result>
+        <result column="title" property="title"></result>
+        <result column="price" property="price"></result>
+        <result column="area" property="area"></result>
+        <result column="room" property="room"></result>
+        <result column="floor" property="floor"></result>
+        <result column="total_floor" property="totalFloor"></result>
+        <result column="watch_times" property="watchTimes"></result>
+        <result column="build_year" property="buildYear"></result>
+        <result column="status" property="status"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="last_update_time" property="lastUpdateTime"></result>
+        <result column="city_en_name" property="cityEnName"></result>
+        <result column="region_en_name" property="regionEnName"></result>
+        <result column="cover" property="cover"></result>
+        <result column="direction" property="direction"></result>
+        <result column="distance_to_subway" property="distanceToSubway"></result>
+        <result column="parlour" property="parlour"></result>
+        <result column="district" property="district"></result>
+        <result column="admin_id" property="adminId"></result>
+        <result column="bathroom" property="bathroom"></result>
+        <result column="street" property="street"></result>
+    </resultMap>
+
+    <select id="getHouseById" resultMap="houseMap">
+        select id,
+               title,
+               price,
+               area,
+               room,
+               floor,
+               total_floor,
+               watch_times,
+               build_year,
+               status,
+               create_time,
+               last_update_time,
+               city_en_name,
+               region_en_name,
+               cover,
+               direction,
+               distance_to_subway,
+               parlour,
+               district,
+               admin_id,
+               bathroom,
+               street
+        from house
+        where id = #{houseId};
+    </select>
+
+    <insert id="saveHouse" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into house (title, price, area, room, floor, total_floor, watch_times, build_year, status,
+                           create_time, last_update_time, city_en_name, region_en_name, cover, direction,
+                           distance_to_subway, parlour, district, admin_id, bathroom, street)
+        values (#{title},
+                #{price},
+                #{area},
+                #{room},
+                #{floor},
+                #{totalFloor},
+                #{watchTimes},
+                #{buildYear},
+                #{status},
+                #{createTime},
+                #{lastUpdateTime},
+                #{cityEnName},
+                #{regionEnName},
+                #{cover},
+                #{direction},
+                #{distanceToSubway},
+                #{parlour},
+                #{district},
+                #{adminId},
+                #{bathroom},
+                #{street});
+    </insert>
+
+    <select id="adminFindAllHousesBySearch" resultMap="houseMap">
+        select id,
+        title,
+        price,
+        area,
+        room,
+        floor,
+        total_floor,
+        watch_times,
+        build_year,
+        status,
+        create_time,
+        last_update_time,
+        city_en_name,
+        region_en_name,
+        cover,
+        direction,
+        distance_to_subway,
+        parlour,
+        district,
+        admin_id,
+        bathroom,
+        street
+        from house
+        <where>
+            1=1
+            <if test="status != null ">
+                and status =#{status}
+            </if>
+            <if test="city != null and city != ''">
+                and city_en_name =#{city}
+            </if>
+            <if test="title != null and title != ''">
+                and title =#{title}
+            </if>
+            <if test="createTimeMin != null ">
+                and create_time <![CDATA[ >= ]]> #{createTimeMin}
+            </if>
+            <if test="createTimeMax != null ">
+                and create_time <![CDATA[ < ]]> #{createTimeMax}
+            </if>
+        </where>
+        <choose>
+            <when test="orderBy != null and orderBy !=''">
+                <choose>
+                    <when test="direction != null and direction !=''">
+                        order by ${orderBy} ${direction}
+                    </when>
+                    <otherwise>
+                        order by ${orderBy} desc
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
+    </select>
+
+    <select id="userFindAllHousesBySearch" resultMap="houseMap">
+        select id,
+        title,
+        price,
+        area,
+        room,
+        floor,
+        total_floor,
+        watch_times,
+        build_year,
+        status,
+        create_time,
+        last_update_time,
+        city_en_name,
+        region_en_name,
+        cover,
+        direction,
+        distance_to_subway,
+        parlour,
+        district,
+        admin_id,
+        bathroom,
+        street
+        from house
+        <where>
+            status != 3
+            <if test="cityEnName != null and cityEnName != '' ">
+                and city_en_name =#{cityEnName}
+            </if>
+            <if test="regionEnName != null and regionEnName != '' ">
+                and region_en_name =#{regionEnName}
+            </if>
+            <if test="room != null and room !='' ">
+                and room =#{room}
+            </if>
+            <if test="direction != null and direction!='' ">
+                and direction =#{direction}
+            </if>
+            <if test="areaBlock != null and areaBlock!='' ">
+                <choose>
+                    <when test="areaKey==1">
+                        and area between 0 and 30
+                    </when>
+                    <when test="areaKey==2">
+                        and area between 30 and 50
+                    </when>
+                    <when test="areaKey==3">
+                        and area &gt; 50
+                    </when>
+                </choose>
+            </if>
+            <if test="priceBlock != null and priceBlock!='' ">
+                <choose>
+                    <when test="priceKey==1">
+                        and price between 0 and 1000
+                    </when>
+                    <when test="priceKey==2">
+                        and price between 1000 and 3000
+                    </when>
+                    <when test="priceKey==3">
+                        and price &gt; 3000
+                    </when>
+                </choose>
+            </if>
+        </where>
+        <choose>
+            <when test="orderBy != null and orderBy !=''">
+                <choose>
+                    <when test="orderDirection != null and orderDirection !=''">
+                        order by ${orderBy} ${orderDirection}
+                    </when>
+                    <otherwise>
+                        order by lastUpdateTime desc
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
+    </select>
+
+
+    <update id="update">
+        UPDATE
+            house
+        SET id                 = #{id},
+            title              = #{title},
+            price              = #{price},
+            area               = #{area},
+            room               = #{room},
+            floor              = #{floor},
+            total_floor        = #{totalFloor},
+            watch_times        = #{watchTimes},
+            build_year         = #{buildYear},
+            status             = #{status},
+            create_time        = #{createTime},
+            last_update_time   = #{lastUpdateTime},
+            city_en_name       = #{cityEnName},
+            region_en_name     = #{regionEnName},
+            cover              = #{cover},
+            direction          = #{direction},
+            distance_to_subway = #{distanceToSubway},
+            parlour            = #{parlour},
+            district           = #{district},
+            admin_id           = #{adminId},
+            bathroom           = #{bathroom},
+            street             = #{street}
+        WHERE id = #{id};
+    </update>
+
+    <update id="updateCover">
+        update house
+        set cover = #{coverId}
+        where id = #{targetId}
+    </update>
+
+    <update id="updateStatus">
+        update house
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <select id="findHouseByHouseIds" resultMap="houseMap">
+        select id,
+        title,
+        price,
+        area,
+        room,
+        floor,
+        total_floor,
+        watch_times,
+        build_year,
+        status,
+        create_time,
+        last_update_time,
+        city_en_name,
+        region_en_name,
+        cover,
+        direction,
+        distance_to_subway,
+        parlour,
+        district,
+        admin_id,
+        bathroom,
+        street
+        from house where id in
+        <foreach collection="houseIds" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateWatchTimes">
+        update house
+        set watch_times=watch_times + 1
+        where id = #{houseId}
+    </update>
+
+</mapper>

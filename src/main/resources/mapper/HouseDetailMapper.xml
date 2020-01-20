@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hww.house.mapper.HouseDetailMapper">
+
+    <resultMap id="houseDetailMap" type="com.hww.house.entity.HouseDetail">
+        <result column="id" property="id"/>
+        <result column="description" property="description"/>
+        <result column="layout_desc" property="layoutDesc"/>
+        <result column="traffic" property="traffic"/>
+        <result column="round_service" property="roundService"/>
+        <result column="rent_way" property="rentWay"/>
+        <result column="address" property="address"/>
+        <result column="subway_line_id" property="subwayLineId"/>
+        <result column="subway_line_name" property="subwayLineName"/>
+        <result column="subway_station_id" property="subwayStationId"/>
+        <result column="subway_station_name" property="subwayStationName"/>
+        <result column="house_id" property="houseId"/>
+    </resultMap>
+
+    <select id="getHouseDetailByHouseId" resultMap="houseDetailMap">
+        select id,
+               description,
+               layout_desc,
+               traffic,
+               round_service,
+               rent_way,
+               address,
+               subway_line_id,
+               subway_line_name,
+               subway_station_id,
+               subway_station_name,
+               house_id
+        from house_detail
+        where house_id = #{houseId};
+    </select>
+
+    <insert id="saveHouseDetail">
+        insert into house_detail (description, layout_desc, traffic, round_service, rent_way, address,
+                                  subway_line_id, subway_line_name, subway_station_id, subway_station_name, house_id)
+        values (#{description},
+                #{layoutDesc},
+                #{traffic},
+                #{roundService},
+                #{rentWay},
+                #{address},
+                #{subwayLineId},
+                #{subwayLineName},
+                #{subwayStationId},
+                #{subwayStationName},
+                #{houseId});
+    </insert>
+
+    <update id="updateDetail">
+        update house_detail
+        <set>
+            <if test="description !=null and description !=''">
+                description= #{description},
+            </if>
+            <if test="layoutDesc !=null and layoutDesc !=''">
+                layout_desc= #{layoutDesc},
+            </if>
+            <if test="traffic !=null and traffic !=''">
+                traffic= #{traffic},
+            </if>
+            <if test="roundService !=null and roundService !=''">
+                round_service= #{roundService},
+            </if>
+            <if test="rentWay !=null and rentWay !=''">
+                rent_way= #{rentWay},
+            </if>
+            <if test="address !=null and address !=''">
+                address= #{address},
+            </if>
+            <if test="subwayLineId !=null and subwayLineId !=''">
+                subway_line_id= #{subwayLineId},
+            </if>
+            <if test="subwayLineName !=null and subwayLineName !=''">
+                subway_line_name= #{subwayLineName},
+            </if>
+            <if test="subwayStationId !=null and subwayStationId !=''">
+                subway_station_id= #{subwayStationId},
+            </if>
+            <if test="subwayStationName !=null and subwayStationName !=''">
+                subway_station_name= #{subwayStationName},
+            </if>
+            <if test="houseId !=null and houseId !=''">
+                house_id= #{houseId}
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+    <select id="findAllByHouseIdIn" resultMap="houseDetailMap">
+        select id,
+        description,
+        layout_desc,
+        traffic,
+        round_service,
+        rent_way,
+        address,
+        subway_line_id,
+        subway_line_name,
+        subway_station_id,
+        subway_station_name,
+        house_id
+        from house_detail where house_id in
+        <foreach collection="houseIds" separator="," open="(" close=")" item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

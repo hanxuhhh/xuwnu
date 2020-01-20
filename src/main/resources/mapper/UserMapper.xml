@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hww.house.mapper.UserMapper">
+
+    <resultMap id="userMap" type="com.hww.house.entity.User">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+        <result column="avatar" property="avatar"/>
+    </resultMap>
+
+
+    <select id="getUserByUserName" resultMap="userMap">
+        select id,
+               name,
+               email,
+               phone_number,
+               password,
+               status,
+               create_time,
+               last_login_time,
+               last_update_time,
+               avatar
+        from user
+        where name = #{userName};
+    </select>
+
+    <select id="getUserByUserId" resultMap="userMap">
+        select id,
+               name,
+               email,
+               phone_number,
+               password,
+               status,
+               create_time,
+               last_login_time,
+               last_update_time,
+               avatar
+        from user
+        where id = #{adminId};
+    </select>
+
+    <select id="getUserByPhone" resultMap="userMap">
+        select id,
+               name,
+               email,
+               phone_number,
+               password,
+               status,
+               create_time,
+               last_login_time,
+               last_update_time,
+               avatar
+        from user
+        where phone_number = #{telephone};
+    </select>
+
+    <insert id="addUser" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        insert into user (name, email, phone_number, password, status, create_time, last_login_time, last_update_time,
+                          avatar)
+        values (#{name}, #{email}, #{phoneNumber}, #{password}, #{status}, #{createTime}, #{lastLoginTime},
+                #{lastUpdateTime}, #{avatar});
+    </insert>
+
+    <update id="updateUser">
+        UPDATE
+            user
+        SET name             = #{name},
+            email            = #{email},
+            phone_number     = #{phoneNumber},
+            password         = #{password},
+            status           = #{status},
+            create_time      = #{createTime},
+            last_login_time  =#{lastLoginTime},
+            last_update_time = #{lastUpdateTime},
+            avatar           = #{avatar}
+        WHERE id = #{id};
+    </update>
+
+    <select id="getUserById" resultMap="userMap">
+        select id,
+               name,
+               email,
+               phone_number,
+               password,
+               status,
+               create_time,
+               last_login_time,
+               last_update_time,
+               avatar
+        from user
+        where id = #{userId};
+    </select>
+
+</mapper>

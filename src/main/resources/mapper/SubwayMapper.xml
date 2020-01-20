@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hww.house.mapper.SubwayMapper">
+
+    <resultMap id="subWayMap" type="com.hww.house.entity.Subway">
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="city_en_name" property="cityEnName"></result>
+    </resultMap>
+
+    <select id="findAllSubwayByCity" resultMap="subWayMap">
+        select id, name, city_en_name
+        from subway
+        where city_en_name = #{cityName};
+    </select>
+
+    <select id="getSubway" resultMap="subWayMap">
+        select id, name, city_en_name
+        from subway
+        where id = #{id};
+    </select>
+
+
+</mapper>

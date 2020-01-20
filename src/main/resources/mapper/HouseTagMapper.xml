@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hww.house.mapper.HouseTagMapper">
+
+    <resultMap id="houseTagMap" type="com.hww.house.entity.HouseTag">
+        <result column="id" property="id"></result>
+        <result column="house_id" property="houseId"></result>
+        <result column="name" property="name"></result>
+
+    </resultMap>
+
+    <select id="getHouseTagByHouseId" resultMap="houseTagMap">
+        select house_id, id, name
+        from house_tag
+        where house_id = #{houseId};
+    </select>
+
+    <insert id="saveHouseTags">
+        insert into house_tag (house_id, name)
+        values
+        <foreach collection="houseTags" separator="," item="item" index="index">
+            (
+            #{item.houseId},
+            #{item.name}
+            )
+        </foreach>
+
+    </insert>
+    <delete id="deleteTagsById">
+        delete
+        from house_tag
+        where id = #{id}
+    </delete>
+
+    <select id="getHouseTagByNameAndHouseId" resultMap="houseTagMap">
+        select house_id, id, name
+        from house_tag
+        where house_id = #{houseId}
+          and name = #{tag};
+    </select>
+
+    <insert id="saveOne">
+        insert into house_tag (house_id, name)
+        values (#{houseId}, #{name})
+    </insert>
+
+    <select id="findAllByHouseIdIn" resultMap="houseTagMap">
+        select house_id, id, name
+        from house_tag where house_id in
+        <foreach collection="houseIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

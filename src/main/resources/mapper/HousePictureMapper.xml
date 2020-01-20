@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hww.house.mapper.HousePictureMapper">
+
+    <resultMap id="housePictureMap" type="com.hww.house.entity.HousePicture">
+        <result column="id" property="id"/>
+        <result column="house_id" property="houseId"/>
+        <result column="cdn_prefix" property="cdnPrefix"/>
+        <result column="width" property="width"/>
+        <result column="height" property="height"/>
+        <result column="location" property="location"/>
+        <result column="path" property="path"/>
+    </resultMap>
+
+    <select id="getHousePicturesByHouseId" resultMap="housePictureMap">
+        select id, house_id, cdn_prefix, width, height, location, path
+        from house_picture
+        where house_id = #{houseId};
+    </select>
+
+    <insert id="savePictures">
+        insert into house_picture (house_id, cdn_prefix, width, height, location, path)
+        values
+        <foreach collection="housePictures" item="item" index="index" separator=",">
+            (#{item.houseId},#{item.cdnPrefix},#{item.width},#{item.height},#{item.location},#{item.path})
+        </foreach>
+    </insert>
+
+    <update id="updatePictures">
+        <foreach collection="pictures" separator=";" item="item">
+            update house_picture
+            <set>
+                <if test="cdnPrefix !=null and cdnPrefix !=''">
+                    cdn_prefix=#{cdnPrefix},
+                </if>
+                <if test="width !=null and width !=''">
+                    width=#{width},
+                </if>
+                <if test="height !=null and height !=''">
+                    height=#{height},
+                </if>
+                <if test="location !=null and location !=''">
+                    location=#{location},
+                </if>
+                <if test="path !=null and path !=''">
+                    path=#{path}
+                </if>
+            </set>
+            where house_id=#{item.houseId};
+        </foreach>
+    </update>
+
+    <delete id="deletePictures">
+        delete
+        from house_picture
+        where id = #{id}
+    </delete>
+</mapper>
